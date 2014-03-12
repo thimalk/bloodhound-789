@@ -32,19 +32,19 @@
   <body>
     <div id="content" class="roadmap">
 
-      <form id="prefs" method="get" action="">
-        <div>
+      <form class="form_inline" role="form" id="prefs" method="get" action="">
+        <div class="form-group">
           <input type="checkbox" id="showcompleted" name="show" value="completed"
                  checked="${'completed' in show or None}" />
           <label for="showcompleted">Show completed milestones</label>
         </div>
-        <div>
+        <div class="form-group">
           <input type="checkbox" id="hidenoduedate" name="show" value="noduedate"
                  checked="${'noduedate' in show or None}" />
           <label for="hidenoduedate">Hide milestones with no due date</label>
         </div>
-        <div class="buttons">
-          <input type="submit" value="${_('Update')}" />
+        <div class="form-group">
+          <input class="btn btn-default" type="submit" value="${_('Update')}" />
         </div>
       </form>
 
@@ -53,7 +53,7 @@
       <div class="milestones">
         <div py:for="idx, milestone in enumerate(milestones)" class="milestone">
 
-          <div class="info trac-progress" py:with="mstats = milestone_stats[idx]">
+          <div class="row" py:with="mstats = milestone_stats[idx]">
             <h2><a href="${href.milestone(milestone.name)}">
               Milestone: <em>${milestone.name}</em>
             </a></h2>
@@ -74,25 +74,28 @@
                 </i18n:msg>
               </p>
               <p py:otherwise="" class="date">
-                No date set
+			<span class="label">No date set</span>
               </p>
             </py:choose>
-            <xi:include href="progress_bar.html" py:if="mstats.stats.count"
-                        py:with="stats = mstats.stats; interval_hrefs = mstats.interval_hrefs;
-                                 stats_href = mstats.stats_href"/>
+            <xi:include href="widget_progress.html" py:if="mstats.stats.count"
+                        py:with="view = 'compact'; legend = True;
+						stats = mstats.stats; interval_hrefs = mstats.interval_hrefs;"
+                                 />
+								 
+								
           </div>
-
-          <div class="description" xml:space="preserve">
+			<p py:if="milestone.description">
+          <div  class="well" xml:space="preserve">
             ${wiki_to_html(context.child(milestone.resource), milestone.description)}
           </div>
-
+			</p>
         </div>
       </div>
 
       <div py:if="'MILESTONE_CREATE' in perm" class="buttons">
        <form id="add" method="get" action="${href.milestone()}"><div>
         <input type="hidden" name="action" value="new" />
-        <input type="submit" value="${_('Add new milestone')}" />
+        <input class="btn btn-default" type="submit" value="${_('Add new milestone')}" />
        </div></form>
       </div>
 
